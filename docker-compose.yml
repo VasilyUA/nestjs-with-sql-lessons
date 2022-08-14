@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: mysqldb
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes:
+      - ./database/data-mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      MYSQL_DATABASE: nest
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: 2820
+      MYSQL_ROOT_PASSWORD: 2820
+    networks:
+      - app
+
+  phpmyadnin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - '8080:80'
+    environment:
+      PMA_PORT: db
+      MYSQL_ROOT_PASSWORD: somewordpress
+    networks:
+      - app
+
+networks:
+  app:
+    driver: bridge
+volumes:
+  db:
