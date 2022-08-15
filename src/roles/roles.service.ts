@@ -13,8 +13,14 @@ export class RolesService {
     const role = await this.roleRepository.create(dto);
     return role;
   }
+
   async getRoleByValue(value: string): Promise<any> {
     const role = await this.roleRepository.findOne({ where: { value } });
     return role;
+  }
+
+  async getAllRoles(): Promise<any> {
+    const roles = await this.roleRepository.findAll();
+    return roles;
   }
 }
