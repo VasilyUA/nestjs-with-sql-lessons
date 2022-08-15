@@ -27,6 +27,10 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email }, include: { all: true }, attributes: { exclude: ['password'] } });
   }
 
+  async getUserByIdWithPassword(email: string) {
+    return this.userRepository.findOne({ where: { email }, include: { all: true } });
+  }
+
   async getUserById(id: number) {
     return this.userRepository.findOne({ where: { id }, include: { all: true }, attributes: { exclude: ['password'] } });
   }

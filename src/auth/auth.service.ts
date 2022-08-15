@@ -10,9 +10,10 @@ export class AuthService {
   constructor(private userService: UsersService, private jwtService: JwtService) {}
 
   async validateUser(userDto: CreateUserDto): Promise<any> {
-    let user = await this.userService.getUserByEmail(userDto.email);
+    let user = await this.userService.getUserByIdWithPassword(userDto.email);
     if (!user) throw new UnauthorizedException({ message: 'Некорректный емайл или пароль' });
     user = user.toJSON();
+
     const passwordEquals = await bcrypt.compare(userDto.password, user.password);
     if (!passwordEquals) throw new UnauthorizedException({ message: 'Некорректный емайл или пароль' });
     return user;
