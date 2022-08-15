@@ -4,12 +4,13 @@ import * as bcrypt from 'bcryptjs';
 import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UsersService } from '../users/users.service';
 import { UserModel } from '../db/models/user.model';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private userService: UsersService, private jwtService: JwtService) {}
 
-  async validateUser(userDto: CreateUserDto): Promise<any> {
+  async validateUser(userDto: LoginUserDto): Promise<any> {
     let user = await this.userService.getUserByIdWithPassword(userDto.email);
     if (!user) throw new UnauthorizedException({ message: 'Некорректный емайл или пароль' });
     user = user.toJSON();
@@ -27,8 +28,7 @@ export class AuthService {
     return this.generateToken(user.toJSON());
   }
 
-  async login(userDto: CreateUserDto) {
-    const user = await this.validateUser(userDto);
+  async login(user: UserModel) {
     return this.generateToken(user);
   }
 

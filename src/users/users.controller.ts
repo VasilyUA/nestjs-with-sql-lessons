@@ -1,18 +1,19 @@
 import { Body, Controller, Get, Param, Patch, Post, UseGuards, UsePipes } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModel } from 'src/db/models/user.model';
 import { RolesGuard } from 'src/auth/gaurds/roles.guard';
+import { ValidationPipe } from 'src/pipes/validation.pipe';
 import { Roles } from 'src/patterns/decorators/roles-auth.decorator';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { ValidationPipe } from '../pipes/validation.pipe';
 
-@ApiTags('Пользователи')
+@ApiTags('Користувачі')
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @ApiOperation({ summary: 'Создание пользователя доступ тільки для адміна' })
+  @ApiOperation({ summary: 'Створення користувача доступно тільки для адміна' })
+  @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
   @ApiResponse({ status: 200, type: UserModel })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
@@ -22,7 +23,8 @@ export class UsersController {
     return this.usersService.createUser(createUserDto);
   }
 
-  @ApiOperation({ summary: 'Получить всех пользователей доступ тільки для адміна' })
+  @ApiOperation({ summary: 'Отримати всіх користувачів доступно тільки для адміна' })
+  @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
   @ApiResponse({ status: 200, type: [UserModel] })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
@@ -31,8 +33,9 @@ export class UsersController {
     return this.usersService.getAllUser();
   }
 
-  @ApiOperation({ summary: 'Додати роль для користувача доступ тільки для адміна' })
-  @ApiResponse({ status: 200, type: [UserModel] })
+  @ApiOperation({ summary: 'Додати роль для користувача доступно тільки для адміна' })
+  @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
+  @ApiResponse({ status: 200, type: UserModel })
   @Roles('ADMIN')
   @UseGuards(RolesGuard)
   @Patch('/:userId/:roleName')
