@@ -3,7 +3,7 @@ import { RolesController } from './roles.controller';
 import { RolesService } from './roles.service';
 import { implementsModelsInModule } from '../db/implementModelsInModule';
 import { UsersModule } from '../users/users.module';
-import { AuthModule } from 'src/auth/auth.module';
+import { AuthModule } from '../auth/auth.module';
 
 @Module({
   controllers: [RolesController],

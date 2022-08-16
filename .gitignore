@@ -38,6 +38,7 @@ lerna-debug.log*
 # envarement config
 *.env
 local.env
+test.env
 dev.env
 staging.env
 prod.env
