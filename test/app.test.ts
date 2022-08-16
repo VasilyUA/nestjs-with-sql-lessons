@@ -4,10 +4,12 @@ import * as supertest from 'supertest';
 import * as _ from 'lodash';
 
 import { AppModule } from '../src/app.module';
+jest.setTimeout(45000);
 
 describe('Main', () => {
   let app: INestApplication;
   let request: any;
+  let server: any;
 
   beforeAll(async () => {
     jest.spyOn(console, 'log').mockImplementation(() => {}); // eslint-disable-line
@@ -17,14 +19,13 @@ describe('Main', () => {
 
     app = moduleFixture.createNestApplication();
     await app.init();
-    request = supertest(app.getHttpServer());
+    server = app.getHttpServer();
+    request = supertest(server);
   });
 
-  it('(GET) / (Home page)', () => {
-    return request.get('/').set('Accept', 'application/json').expect(200).expect('Hello NestJS!');
-  });
+  it("GET '/' Home page", () => request.get('/').set('Accept', 'application/json').expect(200).expect('Hello NestJS!'));
 
-  it('(GET) /404 (Not found)', () =>
+  it("GET '/404'  Not found", () =>
     request
       .get('/404')
       .expect(404)

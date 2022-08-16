@@ -16,11 +16,12 @@ export class RolesService {
 
   async getRoleByValue(value: string): Promise<any> {
     const role = await this.roleRepository.findOne({ where: { value } });
+    if (!role) throw new HttpException('Роль для користувача не знайдена', HttpStatus.NOT_FOUND);
+
     return role;
   }
 
   async getAllRoles(): Promise<any> {
-    const roles = await this.roleRepository.findAll();
-    return roles;
+    return this.roleRepository.findAll();
   }
 }

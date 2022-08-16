@@ -7,19 +7,12 @@ import { UsersModule } from '../users/users.module';
 import { LocalStrategy } from './strateges/local.strategy';
 import { JwtStrategy } from './strateges/jwt.strategy';
 import configuration from '../config';
+import { jwtConfig } from './jwt.seting';
 
 @Module({
   controllers: [AuthController],
   providers: [AuthService, LocalStrategy, JwtStrategy],
-  imports: [
-    configuration,
-    forwardRef(() => UsersModule),
-    PassportModule,
-    JwtModule.register({
-      secret: process.env.JWT_SECRET || 'secret',
-      signOptions: { expiresIn: process.env.EXPARED_TOKEN || '3600s' },
-    }),
-  ],
+  imports: [configuration, forwardRef(() => UsersModule), PassportModule, JwtModule.register(jwtConfig)],
   exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

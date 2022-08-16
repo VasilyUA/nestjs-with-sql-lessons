@@ -3,7 +3,7 @@ module.exports = {
   // The directory where Jest should output its coverage files
   coverageDirectory: '<rootDir>/coverage',
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ['\\\\node_modules\\\\'],
+  coveragePathIgnorePatterns: ['node_modules', 'validation.exception.ts', 'main.ts', 'jwt.seting.ts', 'mysql.ts'],
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   modulePathIgnorePatterns: ['<rootDir>/lambda/'],
   // Activates notifications for test results

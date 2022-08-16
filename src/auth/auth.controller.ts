@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Request, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Request, UseGuards, UsePipes } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ValidationPipe } from '../pipes/validation.pipe';
 import { CreateUserDto } from '../users/dto/create-user.dto';
@@ -7,7 +7,7 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { LocalAuthGuard } from './gaurds/local-auth.guard';
 
 @ApiTags('Авторизація')
-@Controller('auth')
+@Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
@@ -24,6 +24,7 @@ export class AuthController {
   @UsePipes(ValidationPipe)
   @UseGuards(LocalAuthGuard)
   @Post('/login')
+  @HttpCode(200)
   login(@Body() userDto: LoginUserDto, @Request() req) {
     return this.authService.login(req.user);
   }

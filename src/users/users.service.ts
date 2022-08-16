@@ -1,22 +1,41 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Sequelize } from 'sequelize-typescript';
 import { InjectModel } from '@nestjs/sequelize';
 import { UserModel } from '../db/models/user.model';
 import { CreateUserDto } from './dto/create-user.dto';
 import { RolesService } from '../roles/roles.service';
+import { hashPassword } from '../helpers/bcrypt-password';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(UserModel) private userRepository: typeof UserModel, private rolesService: RolesService) {}
+  constructor(@InjectModel(UserModel) private userRepository: typeof UserModel, private rolesService: RolesService, private sequelize: Sequelize) {}
 
   async createUser(dto: CreateUserDto) {
-    const user = await this.userRepository.create(dto);
-    let role = await this.rolesService.getRoleByValue('USER');
-    if (!role) throw new HttpException('Роль для користувача не знайдена', HttpStatus.BAD_REQUEST);
-    role = role.toJSON();
-    await user.$set('roles', [role.id]);
-    user.roles = [role];
+    try {
+      await this.sequelize.transaction(async (t) => {
+        const transactionHost = { transaction: t };
 
-    return user;
+        const newUser = await this.userRepository.create(dto, transactionHost);
+        let role = await this.rolesService.getRoleByValue('USER');
+
+        role = role.toJSON();
+        await newUser.$set('roles', [role.id], transactionHost);
+      });
+      const newUser = await this.getUserByEmail(dto.email);
+
+      return newUser;
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async createUserByAdmin(dto: CreateUserDto) {
+    const checkUserExist = await this.getUserByEmail(dto.email);
+    if (checkUserExist) throw new HttpException('Користувач з таким email вже існує', HttpStatus.BAD_REQUEST);
+
+    const user = await hashPassword(dto);
+
+    return this.createUser(user);
   }
 
   async getAllUser() {
@@ -40,7 +59,6 @@ export class UsersService {
     if (!userDocument) throw new HttpException('Користувач не знайдено', HttpStatus.NOT_FOUND);
 
     const roleDocument = await this.rolesService.getRoleByValue(roleName);
-    if (!roleDocument) throw new HttpException('Роль для користувача не знайдена', HttpStatus.NOT_FOUND);
 
     const role = roleDocument.toJSON();
     await userDocument.$set('roles', [role.id]);

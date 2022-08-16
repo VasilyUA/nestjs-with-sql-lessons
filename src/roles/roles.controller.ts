@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../src/auth/gaurds/jwt-auth.guard';
 import { Roles } from '../patterns/decorators/roles-auth.decorator';
 import { RolesGuard } from '../auth/gaurds/roles.guard';
 import { RoleModel } from '../db/models/role.model';
@@ -13,9 +14,9 @@ export class RolesController {
 
   @ApiOperation({ summary: 'Створення ролі доступно тільки для адміна' })
   @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
-  @ApiResponse({ status: 200, type: RoleModel })
+  @ApiResponse({ status: 201, type: RoleModel })
   @Roles('ADMIN')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post()
   async createRole(@Body() dto: CreateRoleDto): Promise<any> {
     return this.releServices.createRole(dto);
@@ -25,7 +26,7 @@ export class RolesController {
   @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
   @ApiResponse({ status: 200, type: RoleModel })
   @Roles('ADMIN')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get('/:roleName')
   getByValue(@Param('roleName') roleName: string): Promise<any> {
     return this.releServices.getRoleByValue(roleName);
@@ -35,7 +36,7 @@ export class RolesController {
   @ApiHeader({ name: 'Authorization', description: 'Bearer token' })
   @ApiResponse({ status: 200, type: [RoleModel] })
   @Roles('ADMIN')
-  @UseGuards(RolesGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
   getAll(): Promise<any> {
     return this.releServices.getAllRoles();
