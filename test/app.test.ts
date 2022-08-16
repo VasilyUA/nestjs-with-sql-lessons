@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as supertest from 'supertest';
 import * as _ from 'lodash';
 
-import { AppModule } from './../src/app.module';
+import { AppModule } from '../src/app.module';
 
 describe('Main', () => {
   let app: INestApplication;
