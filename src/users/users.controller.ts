@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, UseGuards, UsePipes } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards, Request, UsePipes } from '@nestjs/common';
 import { ApiHeader, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UserModel } from '../db/models/user.model';
 import { RolesGuard } from '../auth/gaurds/roles.guard';
@@ -7,6 +7,7 @@ import { ValidationPipe } from '../pipes/validation.pipe';
 import { Roles } from '../patterns/decorators/roles-auth.decorator';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UserFactory } from '../patterns/strategys/user/index';
 
 @ApiTags('Користувачі')
 @Controller('users')
@@ -30,7 +31,9 @@ export class UsersController {
   @Roles('ADMIN')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Get()
-  getAll() {
+  async getAll(@Request() req) {
+    const strategy = await UserFactory(req);
+    console.log(strategy.getRequest()); // eslint-disable-line no-console
     return this.usersService.getAllUser();
   }
 
