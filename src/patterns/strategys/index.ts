@@ -1,4 +1,3 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
 import { existsSync } from 'fs';
 import { parse } from 'path';
 
@@ -20,6 +19,4 @@ export const getStrategy = async (req, dirname) => {
     const { Strategy } = await import(filePatch);
     return new Strategy(req);
   }
-
-  throw new HttpException('Користувач з такою ролю не може нічого зробити', HttpStatus.BAD_REQUEST);
 };
