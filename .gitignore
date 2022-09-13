@@ -36,9 +36,7 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # envarement config
-*.env
 local.env
-test.env
 dev.env
 staging.env
 prod.env

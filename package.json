@@ -14,9 +14,9 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest --runInBand --forceExit",
-    "test:w": "jest --watch",
-    "test:c": "jest --coverage",
+    "test": "cross-env NODE_ENV=test jest --runInBand --forceExit",
+    "test:w": "cross-env NODE_ENV=test jest --watch",
+    "test:c": "cross-env NODE_ENV=test jest --coverage",
     "test:d": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {

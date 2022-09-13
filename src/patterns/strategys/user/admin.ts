@@ -3,7 +3,6 @@ class AdminStrategy {
 
   constructor(req) {
     this.req = req;
-    console.warn('call AdminStrategy'); // eslint-disable-line no-console
   }
 
   public getRequest() {
