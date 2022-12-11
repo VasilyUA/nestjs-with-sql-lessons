@@ -21,11 +21,11 @@ $ npm install
 ## Running the app
 
 ```bash
-# development
+# start application
 $ npm start
 
 # watch mode
-$ npm run start:dev
+$ npm run start:w
 
 # production mode
 $ npm run start:prod
